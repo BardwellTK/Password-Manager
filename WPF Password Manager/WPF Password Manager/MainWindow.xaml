@@ -1,0 +1,44 @@
+﻿<Window x:Class="WPF_Password_Manager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_Password_Manager"
+        mc:Ignorable="d"
+        Title="Password Manager" Height="557" Width="345" ResizeMode="NoResize">
+
+    <Grid>
+        <ListView x:Name="listViewer" HorizontalAlignment="Left" Height="279" Margin="10,82,0,0" VerticalAlignment="Top" Width="315" Style="{DynamicResource GeoLight}" MouseDoubleClick="Select">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button x:Name="buttonSelect" Content="Select" HorizontalAlignment="Left" Margin="10,366,0,0" VerticalAlignment="Top" Width="75" Click="Select" Style="{DynamicResource GeoLight}"/>
+        <Button x:Name="buttonBack" Content="Back" HorizontalAlignment="Left" Margin="170,450,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource GeoLight}" Click="Back"/>
+        <Button x:Name="buttonEdit" Content="Edit" HorizontalAlignment="Left" Margin="90,366,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource GeoLight}" Click="Edit"/>
+        <Button x:Name="buttonReTitle" Content="Re-Title" HorizontalAlignment="Left" Margin="170,366,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource GeoLight}" Click="ReTitle"/>
+        <Label x:Name="labelTitle" Content="Title" HorizontalAlignment="Left" Margin="10,391,0,0" VerticalAlignment="Top" Style="{DynamicResource TekoMed}" FontSize="16"/>
+        <TextBox x:Name="InputTitle" HorizontalAlignment="Left" Height="23" Margin="52,394,0,0" VerticalAlignment="Top" Width="273" Style="{DynamicResource GeoLight}" Text=""/>
+        <Button x:Name="buttonAdd" Content="Add" HorizontalAlignment="Left" Margin="250,450,0,0" VerticalAlignment="Top" Width="75" Style="{DynamicResource GeoLight}" Click="Add"/>
+        <Label x:Name="labelData" Content="Data" HorizontalAlignment="Left" Margin="10,419,0,0" VerticalAlignment="Top" Style="{DynamicResource TekoMed}" FontSize="16"/>
+        <TextBox x:Name="InputData" HorizontalAlignment="Left" Height="23" Margin="52,422,0,0" VerticalAlignment="Top" Width="273" Style="{DynamicResource GeoLight}"/>
+        <TextBox x:Name="labelRecent" HorizontalAlignment="Left" Height="40" Margin="10,482,0,0" TextWrapping="Wrap" Text="----" VerticalAlignment="Top" Width="315" Style="{DynamicResource GeoLight}" FontSize="14" BorderThickness="0" IsReadOnly="True"/>
+        <Label x:Name="labelMenu" Content="Menu" HorizontalAlignment="Left" Margin="10,9,0,0" VerticalAlignment="Top" Style="{DynamicResource TekoMed}" FontSize="18"/>
+        <Button x:Name="buttonOptions" Content="{DynamicResource OptionsImage}" HorizontalAlignment="Left" Margin="300,11,0,0" VerticalAlignment="Top" Width="25" Height="25" Click="Options"/>
+        <Button x:Name="buttonUndo" Content="{StaticResource UndoImage}" HorizontalAlignment="Left" Margin="240,11,0,0" VerticalAlignment="Top" Width="25" Height="25"/>
+        <Button x:Name="buttonRedo" Content="{StaticResource RedoImage}" HorizontalAlignment="Left" Margin="270,11,0,0" VerticalAlignment="Top" Width="25" Height="25"/>
+        <Button x:Name="buttonDelete" Content="Delete" HorizontalAlignment="Left" Margin="250,366,0,0" VerticalAlignment="Top" Width="75" Click="Delete" Style="{DynamicResource GeoLight}"/>
+        <Label x:Name="labelSearch" Content="Search" HorizontalAlignment="Left" Margin="10,48,0,0" VerticalAlignment="Top" Style="{DynamicResource TekoMed}" FontSize="16" Width="63"/>
+        <TextBox x:Name="InputSearch" HorizontalAlignment="Left" Height="23" Margin="52,51,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="273" Style="{DynamicResource GeoLight}" TextChanged="Search"/>
+        <Canvas Height="2" Width="315" Background="Black" Margin="10,41,14,485"/>
+        <Canvas x:Name="panelOptions" HorizontalAlignment="Left" Height="439" Margin="0,38,0,0" VerticalAlignment="Top" Width="339" Background="White">
+            <Canvas Height="2" Canvas.Left="10" Canvas.Top="155" Width="315" Background="Black"/>
+            <Canvas Height="2" Canvas.Left="10" Canvas.Top="7" Width="315" Background="Black"/>
+            <Label Content="OPTIONS" Canvas.Left="121" Canvas.Top="64"/>
+
+        </Canvas>
+    </Grid>
+
+</Window>

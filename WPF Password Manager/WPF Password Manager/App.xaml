@@ -1,0 +1,26 @@
+﻿<Application x:Class="WPF_Password_Manager.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:WPF_Password_Manager"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <BitmapImage x:Key="UndoImageSource" UriSource="pack://application:,,,/ButtonImages/undo2.png" />
+        <BitmapImage x:Key="RedoImageSource" UriSource="pack://application:,,,/ButtonImages/redo2.png" />
+        <BitmapImage x:Key="OptionImageSource" UriSource="pack://application:,,,/ButtonImages/option2.png" />
+        <FontFamily x:Key="Teko">pack://application:,,,/Fonts/#Teko</FontFamily>
+        <FontFamily x:Key="Geomanist">pack://application:,,,/Fonts/#Geomanist</FontFamily>
+        <Style x:Key="GeoLight">
+            <Setter Property="TextElement.FontFamily" Value="{StaticResource Geomanist}"/>
+            <Setter Property="TextElement.FontWeight" Value="Light"/>
+            <Setter Property="TextElement.FontStyle" Value="Normal"/>
+        </Style>
+        <Style x:Key="TekoMed">
+            <Setter Property="TextElement.FontFamily" Value="{StaticResource Teko}"/>
+            <Setter Property="TextElement.FontWeight" Value="Medium"/>
+            <Setter Property="TextElement.FontStyle" Value="Normal"/>
+        </Style>
+        <Image x:Key="OptionsImage" Source="{StaticResource OptionImageSource}" x:Shared="False"/>
+        <Image x:Key="UndoImage" Source="{StaticResource UndoImageSource}" x:Shared="False"/>
+        <Image x:Key="RedoImage" Source="{StaticResource RedoImageSource}" x:Shared="False"/>
+    </Application.Resources>
+</Application>
