@@ -20,19 +20,12 @@ namespace WPF_Password_Manager
             try
             {
                 //define two strings for event output
-                string listname = "", item = "";
+
                 var c = (Container)listViewer.SelectedItem;
-                SelectedContainer.Remove(c);
+                StaticDelete(c);
                 _eventHistory.NewEvent(menuIndex, EventType.Delete, c, null);
-                listname = c.Parent.Title;
-                item = c.Title;
 
-                if (item != "") //Tell user item successfully deleted
-                    labelRecent.Text = $"'{item}' from '{listname}' successfully deleted!";
 
-                SaveCheck();
-                //Refresh
-                MenuHandler();
             }
             catch (ArgumentOutOfRangeException)
             {
@@ -42,7 +35,26 @@ namespace WPF_Password_Manager
             {
                 Error("deleting item [unknown]");
             }
-            
+
+        }
+
+        /// <summary>
+        /// StaticDelete: Takes input and Deletes item from list
+        /// </summary>
+        private void StaticDelete(Container c)
+        {
+          string listname = "", item = "";
+          listname = c.Parent.Title;
+          item = c.Title;
+          SelectedContainer.Remove(c);
+
+          if (!String.IsNullOrEmpty(item)) //Tell user item successfully deleted
+          {
+              labelRecent.Text = $"'{item}' from '{listname}' successfully deleted!";
+          }
+          SaveCheck();
+          //Refresh
+          MenuHandler();
         }
 
         /// <summary>
@@ -176,7 +188,7 @@ namespace WPF_Password_Manager
                     {
                         throw new Exception("Title already in use.");
                     }
-                    
+
                     //save
                     SaveCheck();
                     //refresh menu
@@ -224,7 +236,7 @@ namespace WPF_Password_Manager
                         {
                             SelectedContainer.Add(new Container(SelectedContainer.Count,t,d));
                         }
-                        
+
                     }
                     //save
                     SaveCheck();
@@ -242,7 +254,7 @@ namespace WPF_Password_Manager
                 Console.WriteLine(f.ToString());
             }
         }
-        
+
         /// <summary>
         /// Back: Returns to parent item in listView.
         /// - Event
@@ -251,7 +263,7 @@ namespace WPF_Password_Manager
         {
             try
             {
-               
+
                 labelRecent.Text = $"Went back from '{SelectedContainer.Title}'";
                 SelectedContainer = SelectedContainer.Parent;
                 switch (menuIndex)
@@ -288,7 +300,7 @@ namespace WPF_Password_Manager
             if (!(String.IsNullOrEmpty(search) || String.IsNullOrWhiteSpace(search)))
             {
                 //for each item...
-                
+
                 List<Container> containerList = SelectedContainer.GetList();
                 if (menuIndex == MenuLocation.Main)
                 {
@@ -316,7 +328,7 @@ namespace WPF_Password_Manager
             }
         }
 
-        
+
         /// <summary>
         /// Options: Shows or hides the user options.
         /// </summary>
@@ -378,7 +390,7 @@ namespace WPF_Password_Manager
             {
                 case MenuLocation.Main:
                     //Enable and disable appropriate buttons
-                    //ON 
+                    //ON
                     buttonReTitle.IsEnabled = true;
                     buttonAdd.IsEnabled = true;
                     buttonSelect.Content = "Select";
@@ -390,7 +402,7 @@ namespace WPF_Password_Manager
                     break;
                 case MenuLocation.Container:
                     //Enable and disable appropriate buttons
-                    //ON 
+                    //ON
                     buttonReTitle.IsEnabled = true;
                     buttonAdd.IsEnabled = true;
                     buttonSelect.Content = "Select";
@@ -402,7 +414,7 @@ namespace WPF_Password_Manager
                     break;
                 case MenuLocation.Box:
                     //Enable and disable appropriate buttons
-                    //ON 
+                    //ON
                     buttonReTitle.IsEnabled = true;
                     buttonAdd.IsEnabled = true;
                     buttonDelete.IsEnabled = true;
@@ -456,10 +468,63 @@ namespace WPF_Password_Manager
             //where did the event occur in the menu?
             var menu = deed.Menu;
             //what event occurred?
-            var eventType = deed.Action;
+            var eT = deed.Action;
             //what data was used?
-
             //{ Add, Delete, Edit, ReTitle, Back, Select}
+            //if delete, Add
+            //if add, Delete
+            //if edit, Edit
+            //if ReTitle, ReTitle
+            //if back, select
+            //if select, back
+            //Does undo/redo matter?
+            //Add/Delete - No
+            //Back/Select - No
+            //Edit/ReTitle - Yes
+
+
+
+            if (eT == EventType.Add)
+            {
+              eT = (eT == EvenType.Add && caller) ? EvenType.Add : eT = (EventType.Delete && !caller) ? EventType.Delete : eT;
+              //Delete
+            }
+            else if (eT == EventType.Delete)
+            {
+              //Add
+            }
+            else if (eT == EventType.Edit)
+            {
+              //Edit
+              if (caller)
+              {
+                //caller == undo
+              }
+              else
+              {
+                //caller == redo
+              }
+            }
+            else if (eT == EventType.ReTitle)
+            {
+              //ReTitle
+              if (caller)
+              {
+                //caller == undo
+              }
+              else
+              {
+                //caller == redo
+              }
+            }
+            else if (eT == EventType.Back)
+            {
+              //Select
+            }
+            else if (eT == EventType.Select)
+            {
+              //Back
+            }
             //TODO ^^^^
         }
     }
