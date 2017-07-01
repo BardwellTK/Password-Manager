@@ -8,6 +8,16 @@ namespace WPF_Password_Manager.DataTypes
 {
     public class IdentityObject : IIdentity
     {
+        //Permanent unique ID
+        private static int universalID = 0;
+        private static int _uniqueID;
+        public int UniqueID { get { return _uniqueID; } }
+        public void SetUniqueID()
+        {
+          _uniqueID = universalID++;
+        }
+
+        //Temporary ID used in list
         private int _iD;
         public int ID { get { return _iD; } set { _iD = value; } }
     }

@@ -38,24 +38,7 @@ namespace WPF_Password_Manager
 
         }
 
-        /// <summary>
-        /// StaticDelete: Takes input and Deletes item from list
-        /// </summary>
-        private void StaticDelete(Container c)
-        {
-          string listname = "", item = "";
-          listname = c.Parent.Title;
-          item = c.Title;
-          SelectedContainer.Remove(c);
 
-          if (!String.IsNullOrEmpty(item)) //Tell user item successfully deleted
-          {
-              labelRecent.Text = $"'{item}' from '{listname}' successfully deleted!";
-          }
-          SaveCheck();
-          //Refresh
-          MenuHandler();
-        }
 
         /// <summary>
         /// Select: Selects selected item from listView.
@@ -67,36 +50,32 @@ namespace WPF_Password_Manager
             {
                 if (listViewer.SelectedItem != null)
                 {
-                    if (menuIndex == MenuLocation.Main)
+                    if (menuIndex == MenuLocation.Box)
                     {
-                        menuIndex = MenuLocation.Container;
-                        SelectedContainer = (Container)listViewer.SelectedItem; //find selected cell
-
-                        InputSearch.Text = "";
-                        labelRecent.Text = $"Container '{SelectedContainer.Title}' selected.";
-                        _eventHistory.NewEvent(menuIndex, EventType.Select, SelectedContainer.Copy(), null);
+                      //Call the copy argument in the event that user double clicks to copy data
+                      Copy(sender, e);
                     }
-                    else if (menuIndex == MenuLocation.Container)
+                    else
                     {
-                        menuIndex = MenuLocation.Box;
-                        SelectedContainer = (Container)listViewer.SelectedItem;
-                        InputSearch.Text = "";
-                        labelRecent.Text = $"Box '{SelectedContainer.Title}' selected.";
-                        _eventHistory.NewEvent(menuIndex, EventType.Select, SelectedContainer.Copy(), null);
-                    }
-                    else if (menuIndex == MenuLocation.Box)
-                    {
-                        //Call the copy argument in the event that user double clicks to copy data
-                        Copy(sender, e);
+                        StaticSelect((Container)listViewer.SelectedItem);
+                        if (menuIndex == MenuLocation.Main)
+                        {
+                          menuIndex = MenuLocation.Container;
+                          _eventHistory.NewEvent(menuIndex, EventType.Select, SelectedContainer.Copy(), null);
+                        }
+                        else if (menuIndex == MenuLocation.Container)
+                        {
+                          menuIndex = MenuLocation.Box;
+                          _eventHistory.NewEvent(menuIndex, EventType.Select, SelectedContainer.Copy(), null);
+                        }
                     }
                 }
             }
             catch (Exception)
             {
                 Error("selecting item");
+                MenuHandler();
             }
-
-            MenuHandler();
         }
 
         /// <summary>
@@ -219,30 +198,13 @@ namespace WPF_Password_Manager
             {
                 if (InputTitle.Text != "")
                 {
+                    //set title and data
                     string t = InputTitle.Text;
                     string d = InputData.Text;
-                    //clear textbox
+                    //clear textboxes
                     InputTitle.Clear();
                     InputData.Clear();
-
-                    if (SelectedContainer.TitleCheck(t))
-                    {
-                        labelRecent.Text = $"'{t}' added to '{SelectedContainer.Title}'";
-                        if (string.IsNullOrEmpty(d))
-                        {
-                            SelectedContainer.Add(new Container(SelectedContainer.Count,t));
-                        }
-                        else
-                        {
-                            SelectedContainer.Add(new Container(SelectedContainer.Count,t,d));
-                        }
-
-                    }
-                    //save
-                    SaveCheck();
-
-                    //refresh list
-                    MenuHandler();
+                    StaticAdd(SelectedContainer,t,d);
                 }
                 else
                 {
@@ -261,31 +223,7 @@ namespace WPF_Password_Manager
         /// </summary>
         private void Back(object sender, RoutedEventArgs e)
         {
-            try
-            {
-
-                labelRecent.Text = $"Went back from '{SelectedContainer.Title}'";
-                SelectedContainer = SelectedContainer.Parent;
-                switch (menuIndex)
-                {
-                    case MenuLocation.Main:
-                        throw new Exception("no back on main"); //no back on main
-                    case MenuLocation.Container:
-                        menuIndex = MenuLocation.Main;
-                        break;
-                    case MenuLocation.Box:
-                        menuIndex = MenuLocation.Container;
-                        break;
-                }
-
-                //Refresh listViewer
-                MenuHandler();
-            }
-            catch (Exception f)
-            {
-                Console.WriteLine($"\n\n\n{f.ToString()}");
-                MenuHandler();
-            }
+            StaticBack();
         }
 
         /// <summary>
@@ -432,7 +370,6 @@ namespace WPF_Password_Manager
             }
         }
 
-
         /// <summary>
         /// Undo: Scrolls back through events
         /// </summary>
@@ -455,77 +392,6 @@ namespace WPF_Password_Manager
             var deed = _eventHistory.SelectedItem;
             //decrypt deed;
             DecryptDeed(deed,false);
-        }
-
-        /// <summary>
-        /// DecryptDeed: Takes a deed, and performs actions based on deed
-        /// </summary>
-        /// <param name="deed"></param>
-        private void DecryptDeed(Deed deed, bool caller)
-        {
-            //undo : caller = true;
-            //redo : caller = false;
-            //where did the event occur in the menu?
-            var menu = deed.Menu;
-            //what event occurred?
-            var eT = deed.Action;
-            //what data was used?
-            //{ Add, Delete, Edit, ReTitle, Back, Select}
-            //if delete, Add
-            //if add, Delete
-            //if edit, Edit
-            //if ReTitle, ReTitle
-            //if back, select
-            //if select, back
-            //Does undo/redo matter?
-            //Add/Delete - No
-            //Back/Select - No
-            //Edit/ReTitle - Yes
-
-
-
-            if (eT == EventType.Add)
-            {
-              eT = (eT == EvenType.Add && caller) ? EvenType.Add : eT = (EventType.Delete && !caller) ? EventType.Delete : eT;
-              //Delete
-            }
-            else if (eT == EventType.Delete)
-            {
-              //Add
-            }
-            else if (eT == EventType.Edit)
-            {
-              //Edit
-              if (caller)
-              {
-                //caller == undo
-              }
-              else
-              {
-                //caller == redo
-              }
-            }
-            else if (eT == EventType.ReTitle)
-            {
-              //ReTitle
-              if (caller)
-              {
-                //caller == undo
-              }
-              else
-              {
-                //caller == redo
-              }
-            }
-            else if (eT == EventType.Back)
-            {
-              //Select
-            }
-            else if (eT == EventType.Select)
-            {
-              //Back
-            }
-            //TODO ^^^^
         }
     }
 }

@@ -6,27 +6,27 @@ namespace WPF_Password_Manager.DataTypes
     {
         public int Count { get { return list.Count; } }
         private List<Container> list;
+        private static int uniqueID = 0;
+        private int _uniqueID;
         private int _selected;
         public int Selected { get { return _selected; } set { _selected = value; } }
         public Container(int i,string t)
         {
-            ID = i;
-            Title = t;
-            list = new List<Container>();
-        }
-        
-        public Container(int i, string t, string d)
-        {
-            ID = i;
-            Title = t;
-            Data = d;
+            InitContainer(i,t);
         }
 
-        public Container()
+        public Container(int i, string t, string d)
         {
-            ID = 0;
-            Title = "Main";
-            list = new List<Container>();
+            Data = d;
+            InitContainer(i,t);
+        }
+
+        private void InitContainer(int i, string t)
+        {
+          SetUniqieID();
+          ID = i;
+          Title = t;
+          list = new List<Container>();
         }
 
         private Container _perspective;
@@ -70,7 +70,7 @@ namespace WPF_Password_Manager.DataTypes
                 list.RemoveAt(index);
             }
         }
-        
+
         public bool TitleCheck(string title)
         {
             foreach(var k in list)
@@ -79,11 +79,11 @@ namespace WPF_Password_Manager.DataTypes
                 {
                     return false;
                 }
-                
+
             }
             return true;
         }
-        
+
         public void EvaluteID()
         {
             int i = 1;
@@ -120,6 +120,17 @@ namespace WPF_Password_Manager.DataTypes
         public List<Container> GetList()
         {
             return list;
+        }
+
+        public void ReplaceAt(Container c)
+        {
+          foreach (var item in list)
+          {
+              if (item.UniqueID == c.UniqueID)
+              {
+                item = c;
+              }
+          }
         }
     }
 }

@@ -17,7 +17,7 @@ namespace WPF_Password_Manager
         Task saveFile;
         private void InitializeWindow()
         {
-            containers = new Container();
+            containers = new Container(0,"Main");
             SelectedContainer = containers;
             LoadFile();
             saveFile = new Task(Save);
@@ -30,7 +30,7 @@ namespace WPF_Password_Manager
             MenuHandler(); //Arranges menu
             labelMenu.MaxWidth = 226;
             _eventHistory = new EventHistory();
-            
+
         }
 
         private void InitializeButtons()
