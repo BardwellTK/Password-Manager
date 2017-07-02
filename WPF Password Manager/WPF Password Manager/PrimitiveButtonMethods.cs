@@ -29,11 +29,20 @@ namespace WPF_Password_Manager
       private void StaticDelete(Container c)
       {
         string listname = "", item = "";
-        listname = c.Parent.Title;
-        item = c.Title;
-        SelectedContainer.Remove(c);
+            var list = SelectedContainer.GetList();
+            foreach (var item1 in list)
+            {
+                if (c.UniqueID == item1.UniqueID)
+                {
+                    c = item1;
+                }
+            }
+            listname = c.Parent.Title;
+            item = c.Title;
+            SelectedContainer.Remove(c);
+            SelectedContainer.EvaluteID();
 
-        if (!String.IsNullOrEmpty(item)) //Tell user item successfully deleted
+            if (!String.IsNullOrEmpty(item)) //Tell user item successfully deleted
         {
             labelRecent.Text = $"'{item}' from '{listname}' successfully deleted!";
         }
@@ -48,23 +57,28 @@ namespace WPF_Password_Manager
       /// </summary>
       private void StaticAdd(string title,string data)
       {
-        if (SelectedContainer.TitleCheck(t))
+        if (SelectedContainer.TitleCheck(title))
         {
-            labelRecent.Text = $"'{title}' added to '{SelectedContainer.Title}'";
-            if (string.IsNullOrEmpty(data))
+            
+            if (menuIndex != MenuLocation.Box)
             {
                 StaticAdd(new Container(SelectedContainer.Count,title));
             }
             else
             {
+                if (string.IsNullOrEmpty(data))
+                    {
+                        data = "----";
+                    }
                 StaticAdd(new Container(SelectedContainer.Count,title,data));
             }
         }
       }
       private void StaticAdd(Container c)
       {
-        //add container
-        SelectedContainer.Add(c);
+            //add container
+            labelRecent.Text = $"'{c.Title}' added to '{SelectedContainer.Title}'";
+            SelectedContainer.Add(c);
         //save
         SaveCheck();
         //refresh list
@@ -92,7 +106,6 @@ namespace WPF_Password_Manager
       {
         try
         {
-
             labelRecent.Text = $"Went back from '{SelectedContainer.Title}'";
             SelectedContainer = SelectedContainer.Parent;
             switch (menuIndex)
@@ -128,7 +141,6 @@ namespace WPF_Password_Manager
                 SelectedContainer = c;
                 if (menuIndex == MenuLocation.Main)
                 {
-                    menuIndex = MenuLocation.Container;
                     InputSearch.Text = "";
                     labelRecent.Text = $"Container '{SelectedContainer.Title}' selected.";
                 }

@@ -62,7 +62,7 @@ namespace WPF_Password_Manager
                 gridView.Columns.Add(ColumnData);
                 
             }
-            else if (gridView.Columns.Contains(ColumnData))
+            else if (menuIndex != MenuLocation.Box && gridView.Columns.Contains(ColumnData))
             {
                 gridView.Columns.Remove(ColumnData);
             }

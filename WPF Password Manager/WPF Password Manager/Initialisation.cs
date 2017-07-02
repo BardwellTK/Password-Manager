@@ -23,7 +23,6 @@ namespace WPF_Password_Manager
             saveFile = new Task(Save);
             panelOptions.Visibility = Visibility.Hidden;
             labelMenuContent = "Main";
-            InputData.IsEnabled = false; //disable Data input
             InitializeButtons(); //Initialises buttons
             SelectedContainer = containers;
             InitializeColumns();
@@ -41,6 +40,9 @@ namespace WPF_Password_Manager
             buttonAdd.IsEnabled = false;
             buttonEdit.IsEnabled = false;
             buttonReTitle.IsEnabled = false;
+            buttonUndo.IsEnabled = false;
+            buttonRedo.IsEnabled = false;
+            InputData.IsEnabled = false; //disable Data input
         }
 
         private void InitializeColumns()

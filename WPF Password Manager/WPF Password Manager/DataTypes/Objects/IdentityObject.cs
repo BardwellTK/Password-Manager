@@ -10,11 +10,15 @@ namespace WPF_Password_Manager.DataTypes
     {
         //Permanent unique ID
         private static int universalID = 0;
-        private static int _uniqueID;
+        private int _uniqueID;
         public int UniqueID { get { return _uniqueID; } }
         public void SetUniqueID()
         {
           _uniqueID = universalID++;
+        }
+        protected void ManualUniqueID(int i)
+        {
+            _uniqueID = i;
         }
 
         //Temporary ID used in list

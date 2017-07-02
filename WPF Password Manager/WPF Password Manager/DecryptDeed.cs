@@ -47,7 +47,7 @@ namespace WPF_Password_Manager
           //        IF REDO >> Apply.deed.After;
           //    }
           //}
-          if (eventType == EventType.Add || eventType == EventType.ReTitle)
+          if (eventType == EventType.Edit || eventType == EventType.ReTitle)
           {
             ApplyData(deed,undo);
           }
@@ -61,12 +61,12 @@ namespace WPF_Password_Manager
           //}
           if (eventType == EventType.Back || eventType == EventType.Select)
           {
-            GoMenu(deed,undo);
+            //GoMenu(deed,undo);
           }
       }
       private void ListChange(Deed deed, bool undo)
       {
-        var eventType == deed.EventType;
+        var eventType = deed.Action;
         if ((eventType == EventType.Delete && undo) || (eventType == EventType.Add && !undo))
         {
           StaticAdd(deed.Before);
@@ -79,35 +79,42 @@ namespace WPF_Password_Manager
 
       private void ApplyData(Deed deed, bool undo)
       {
-        var eventType = deed.EventType;
-          //Sum edit and re-title into one method? OverwriteContainer(Container c);
-          //Because undo always uses deed.Before and vice versa.
+        var eventType = deed.Action;
+            //Sum edit and re-title into one method? OverwriteContainer(Container c);
+            //Because undo always uses deed.Before and vice versa.
           if (eventType == EventType.Edit || eventType == EventType.ReTitle)
           {
               if (undo)
               {
                 StaticOverwriteContainer(deed.Before);
-              }
+                }
               else
               {
                 StaticOverwriteContainer(deed.After);
-              }
+                }
           }
 
       }
 
       private void GoMenu(Deed deed, bool undo)
       {
-        var eventType = deed.EventType;
+        var eventType = deed.Action;
         if ((eventType == EventType.Back && undo) || (eventType == EventType.Select && !undo))
         {
-          //Menu.Go.Forward
-          StaticSelect(deed.Before);
+                if (menuIndex != MenuLocation.Box)
+                {
+                    //Menu.Go.Forward
+                    StaticSelect(deed.Before);
+                }
         }
         else if ((eventType == EventType.Select && undo) || (eventType == EventType.Back && !undo))
         {
-          //Menu.Go.Backward
-          StaticBack(deed.Before);
+          if (menuIndex != MenuLocation.Main)
+                {
+                    //Menu.Go.Backward
+                    StaticBack();
+                    
+                }
         }
       }
     }

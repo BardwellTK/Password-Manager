@@ -1,1 +1,1 @@
-saveLoc ~ "B:\Google Drive\Projects\Personal\WPF Password Manager\WPF Password Manager\bin\Debug\data.txt"
+saveLoc ~ "C:\Users\Bardwell\Documents\GitHub\Password-Manager\WPF Password Manager\WPF Password Manager\bin\Debug\data.txt"

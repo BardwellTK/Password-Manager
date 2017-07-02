@@ -11,16 +11,16 @@ namespace WPF_Password_Manager
     public class EventHistory
     {
         private List<Deed> EventList;
-        private byte _selectedEvent;
+        private int _selectedEvent;
         private Deed _selectedObject;
         public EventHistory()
         {
             EventList = new List<Deed>();
         }
 
-        public void NewEvent(MenuLocation menu,EventType eve,Container before,Container after)
+        public void NewEvent(MenuLocation menu, EventType eve, Container before, Container after)
         {
-            Deed newDeed = new Deed(menu,eve,before,after);
+            Deed newDeed = new Deed(menu, eve, before, after);
             if (EventList.Count > 0 && _selectedEvent < EventList.Count - 1)
             {
                 //if _selectedEvent < EventList.Count
@@ -34,7 +34,7 @@ namespace WPF_Password_Manager
             {
                 //fill list
                 EventList.Add(newDeed);
-                
+
             }
             else
             {
@@ -42,16 +42,25 @@ namespace WPF_Password_Manager
                 EventList.RemoveAt(0);
                 EventList.Add(newDeed);
             }
-            _selectedEvent = (byte)(EventList.Count - 1);
+            _selectedEvent = (EventList.Count - 1);
+            _selectedObject = EventList[_selectedEvent];
 
         }
 
+        public void Reset()
+        {
+            EventList.Clear();
+            _selectedEvent = 0;
+            _selectedObject = null;
+        }
+    
+
         public bool Back()
         {
-            if (_selectedEvent > 0)
+            if (_selectedEvent >= 0)
             {
-                _selectedEvent--;
-                _selectedObject = EventList[_selectedEvent];
+                //_selectedEvent--;
+                _selectedObject = EventList[_selectedEvent--];
                 return true;
             }
             return false;
@@ -61,8 +70,8 @@ namespace WPF_Password_Manager
         {
             if (_selectedEvent < 14 && _selectedEvent < EventList.Count)
             {
-                _selectedEvent++;
-                _selectedObject = EventList[_selectedEvent];
+                //_selectedEvent++;
+                _selectedObject = EventList[++_selectedEvent];
                 return true;
             }
             return false;
@@ -70,6 +79,7 @@ namespace WPF_Password_Manager
 
         public Deed SelectedItem { get { return _selectedObject; } }
         public int EventCount { get { return EventList.Count; } }
+        public int SelectedEvent { get { return _selectedEvent; } }
 
         
     }

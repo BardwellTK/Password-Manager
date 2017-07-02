@@ -23,8 +23,8 @@ namespace WPF_Password_Manager
 
                 var c = (Container)listViewer.SelectedItem;
                 StaticDelete(c);
-                _eventHistory.NewEvent(menuIndex, EventType.Delete, c, null);
-
+                _eventHistory.NewEvent(menuIndex, EventType.Delete, c.Copy(), null);
+                EventButtonHandler();
 
             }
             catch (ArgumentOutOfRangeException)
@@ -57,16 +57,22 @@ namespace WPF_Password_Manager
                     }
                     else
                     {
-                        StaticSelect((Container)listViewer.SelectedItem);
+                        
                         if (menuIndex == MenuLocation.Main)
                         {
                           menuIndex = MenuLocation.Container;
-                          _eventHistory.NewEvent(menuIndex, EventType.Select, SelectedContainer.Copy(), null);
+                            StaticSelect((Container)listViewer.SelectedItem);
+                            _eventHistory.Reset();
+                            //_eventHistory.NewEvent(menuIndex, EventType.Select, SelectedContainer, null);
+                            EventButtonHandler();
                         }
                         else if (menuIndex == MenuLocation.Container)
                         {
                           menuIndex = MenuLocation.Box;
-                          _eventHistory.NewEvent(menuIndex, EventType.Select, SelectedContainer.Copy(), null);
+                            StaticSelect((Container)listViewer.SelectedItem);
+                            _eventHistory.Reset();
+                            //_eventHistory.NewEvent(menuIndex, EventType.Select, SelectedContainer, null);
+                            EventButtonHandler();
                         }
                     }
                 }
@@ -89,7 +95,7 @@ namespace WPF_Password_Manager
             {
                 var c = (Container)listViewer.SelectedItem;
                 Clipboard.SetText(c.Data);
-                labelRecent.Text = $"Successfully copied '{c.Data}' from '{c.Parent.Title}'";
+                labelRecent.Text = $"Successfully copied '{c.Title}' from '{c.Parent.Title}'";
             }
             catch (Exception)
             {
@@ -119,7 +125,9 @@ namespace WPF_Password_Manager
                     //change data to textbox.text
                     var copy = c.Copy();
                     c.Data = InputData.Text;
+                    c = c.Copy();
                     _eventHistory.NewEvent(menuIndex,EventType.Edit,copy,c);
+                    EventButtonHandler();
                     //clear textbox
                     InputData.Clear();
                     //save
@@ -160,8 +168,13 @@ namespace WPF_Password_Manager
                     {
                         //update label
                         labelRecent.Text = $"'{c.Title}' in '{c.Parent.Title}' was changed to '{t}'";
+                        var temp = c.Copy();
+                        
                         //update title
                         c.Title = t;
+                        c = c.Copy();
+                        _eventHistory.NewEvent(menuIndex, EventType.ReTitle, temp, c);
+                        EventButtonHandler();
                     }
                     else
                     {
@@ -204,7 +217,11 @@ namespace WPF_Password_Manager
                     //clear textboxes
                     InputTitle.Clear();
                     InputData.Clear();
-                    StaticAdd(SelectedContainer,t,d);
+                    StaticAdd(t,d);
+                    var c = SelectedContainer.GetList();
+                    var b = c[SelectedContainer.Count - 1].Copy();
+                    _eventHistory.NewEvent(menuIndex, EventType.Add, b, null);
+                    EventButtonHandler();
                 }
                 else
                 {
@@ -223,7 +240,10 @@ namespace WPF_Password_Manager
         /// </summary>
         private void Back(object sender, RoutedEventArgs e)
         {
+            //_eventHistory.NewEvent(menuIndex, EventType.Back, SelectedContainer.Parent, null);
+            _eventHistory.Reset();
             StaticBack();
+            EventButtonHandler();
         }
 
         /// <summary>
@@ -380,6 +400,7 @@ namespace WPF_Password_Manager
             _eventHistory.Back();
             //decrypt deed;
             DecryptDeed(deed,true);
+            EventButtonHandler();
         }
 
         /// <summary>
@@ -392,6 +413,36 @@ namespace WPF_Password_Manager
             var deed = _eventHistory.SelectedItem;
             //decrypt deed;
             DecryptDeed(deed,false);
+            EventButtonHandler();
+        }
+
+        private void EventButtonHandler()
+        {
+            if (_eventHistory.EventCount == 0)
+            {
+                buttonUndo.IsEnabled = false;
+                buttonRedo.IsEnabled = false;
+            }
+            else
+            {
+                if (_eventHistory.EventCount > 0 && _eventHistory.SelectedEvent >= 0)
+                {
+                    buttonUndo.IsEnabled = true;
+                }
+                else
+                {
+                    buttonUndo.IsEnabled = false;
+                }
+
+                if (_eventHistory.SelectedEvent < _eventHistory.EventCount - 1)
+                {
+                    buttonRedo.IsEnabled = true;
+                }
+                else
+                {
+                    buttonRedo.IsEnabled = false;
+                }
+            }
         }
     }
 }

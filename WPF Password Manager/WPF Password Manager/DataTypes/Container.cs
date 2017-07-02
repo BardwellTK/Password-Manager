@@ -6,8 +6,6 @@ namespace WPF_Password_Manager.DataTypes
     {
         public int Count { get { return list.Count; } }
         private List<Container> list;
-        private static int uniqueID = 0;
-        private int _uniqueID;
         private int _selected;
         public int Selected { get { return _selected; } set { _selected = value; } }
         public Container(int i,string t)
@@ -23,7 +21,7 @@ namespace WPF_Password_Manager.DataTypes
 
         private void InitContainer(int i, string t)
         {
-          SetUniqieID();
+          SetUniqueID();
           ID = i;
           Title = t;
           list = new List<Container>();
@@ -86,7 +84,7 @@ namespace WPF_Password_Manager.DataTypes
 
         public void EvaluteID()
         {
-            int i = 1;
+            int i = 0;
             foreach (var item in list)
             {
                 item.ID = i++;
@@ -108,11 +106,13 @@ namespace WPF_Password_Manager.DataTypes
                 {
                     output.IntoPerspective(_perspective.ID);
                 }
-                output.SetParent(_parent);
-                return output;
             }
-            output = new Container(ID, Title, Data);
+            else
+            {
+                output = new Container(ID, Title, Data);
+            }
             output.SetParent(_parent);
+            output.ManualUniqueID(this.UniqueID);
             return output;
 
         }
@@ -124,13 +124,14 @@ namespace WPF_Password_Manager.DataTypes
 
         public void ReplaceAt(Container c)
         {
-          foreach (var item in list)
-          {
-              if (item.UniqueID == c.UniqueID)
-              {
-                item = c;
-              }
-          }
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].UniqueID == c.UniqueID)
+                {
+                    list[i].Title = c.Title;
+                    list[i].Data = c.Data;
+                }
+            }
         }
     }
 }

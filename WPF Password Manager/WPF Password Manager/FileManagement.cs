@@ -137,7 +137,7 @@ namespace WPF_Password_Manager
                 int end = data.IndexOf("\"", start + 1);
                 string output = data.Substring(start, end - start);
                 return output;
-            } catch (ArgumentOutOfRangeException e)
+            } catch (ArgumentOutOfRangeException)
             {
                 return "";
             }
