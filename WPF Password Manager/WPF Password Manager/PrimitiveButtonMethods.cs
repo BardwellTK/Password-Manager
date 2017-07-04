@@ -79,6 +79,7 @@ namespace WPF_Password_Manager
             //add container
             labelRecent.Text = $"'{c.Title}' added to '{SelectedContainer.Title}'";
             SelectedContainer.Add(c);
+            SelectedContainer.EvaluteID();
         //save
         SaveCheck();
         //refresh list
@@ -111,7 +112,7 @@ namespace WPF_Password_Manager
             switch (menuIndex)
             {
                 case MenuLocation.Main:
-                    throw new Exception("no back on main"); //no back on main
+                    //throw new Exception("no back on main"); //no back on main
                 case MenuLocation.Container:
                     menuIndex = MenuLocation.Main;
                     break;
@@ -143,11 +144,13 @@ namespace WPF_Password_Manager
                 {
                     InputSearch.Text = "";
                     labelRecent.Text = $"Container '{SelectedContainer.Title}' selected.";
+                    menuIndex = MenuLocation.Container;
                 }
                 else if (menuIndex == MenuLocation.Container)
                 {
                     InputSearch.Text = "";
                     labelRecent.Text = $"Box '{SelectedContainer.Title}' selected.";
+                    menuIndex = MenuLocation.Box;
                 }
         }
         catch (Exception e)

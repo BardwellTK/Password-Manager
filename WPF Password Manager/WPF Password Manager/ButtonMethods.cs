@@ -57,21 +57,21 @@ namespace WPF_Password_Manager
                     }
                     else
                     {
-                        
+
                         if (menuIndex == MenuLocation.Main)
                         {
-                          menuIndex = MenuLocation.Container;
-                            StaticSelect((Container)listViewer.SelectedItem);
-                            _eventHistory.Reset();
-                            //_eventHistory.NewEvent(menuIndex, EventType.Select, SelectedContainer, null);
+                          SelectedContainer = (Container)listViewer.SelectedItem;
+                            StaticSelect(SelectedContainer);
+                            //_eventHistory.Reset();
+                            _eventHistory.NewEvent(MenuLocation.Main, EventType.Select, SelectedContainer, null);
                             EventButtonHandler();
                         }
                         else if (menuIndex == MenuLocation.Container)
                         {
-                          menuIndex = MenuLocation.Box;
-                            StaticSelect((Container)listViewer.SelectedItem);
-                            _eventHistory.Reset();
-                            //_eventHistory.NewEvent(menuIndex, EventType.Select, SelectedContainer, null);
+                            SelectedContainer = (Container)listViewer.SelectedItem;
+                            StaticSelect(SelectedContainer);
+                            //_eventHistory.Reset();
+                            _eventHistory.NewEvent(MenuLocation.Container, EventType.Select, SelectedContainer, null);
                             EventButtonHandler();
                         }
                     }
@@ -169,7 +169,7 @@ namespace WPF_Password_Manager
                         //update label
                         labelRecent.Text = $"'{c.Title}' in '{c.Parent.Title}' was changed to '{t}'";
                         var temp = c.Copy();
-                        
+
                         //update title
                         c.Title = t;
                         c = c.Copy();
@@ -240,8 +240,8 @@ namespace WPF_Password_Manager
         /// </summary>
         private void Back(object sender, RoutedEventArgs e)
         {
-            //_eventHistory.NewEvent(menuIndex, EventType.Back, SelectedContainer.Parent, null);
-            _eventHistory.Reset();
+            _eventHistory.NewEvent(menuIndex, EventType.Back, SelectedContainer.Parent, null);
+            //_eventHistory.Reset();
             StaticBack();
             EventButtonHandler();
         }
@@ -395,11 +395,8 @@ namespace WPF_Password_Manager
         /// </summary>
         private void Undo(object sender, RoutedEventArgs e)
         {
-            //get deed; go back;
-            var deed = _eventHistory.SelectedItem;
-            _eventHistory.Back();
             //decrypt deed;
-            DecryptDeed(deed,true);
+            DecryptDeed(true);
             EventButtonHandler();
         }
 
@@ -408,24 +405,14 @@ namespace WPF_Password_Manager
         /// </summary>
         private void Redo(object sender, RoutedEventArgs e)
         {
-            //go forward; get deed;
-            _eventHistory.Forward();
-            var deed = _eventHistory.SelectedItem;
-            //decrypt deed;
-            DecryptDeed(deed,false);
+            DecryptDeed(false);
             EventButtonHandler();
         }
 
         private void EventButtonHandler()
         {
-            if (_eventHistory.EventCount == 0)
-            {
-                buttonUndo.IsEnabled = false;
-                buttonRedo.IsEnabled = false;
-            }
-            else
-            {
-                if (_eventHistory.EventCount > 0 && _eventHistory.SelectedEvent >= 0)
+            
+                if (_eventHistory.UndoCount > 0)
                 {
                     buttonUndo.IsEnabled = true;
                 }
@@ -434,7 +421,7 @@ namespace WPF_Password_Manager
                     buttonUndo.IsEnabled = false;
                 }
 
-                if (_eventHistory.SelectedEvent < _eventHistory.EventCount - 1)
+                if (_eventHistory.RedoCount > 0)
                 {
                     buttonRedo.IsEnabled = true;
                 }
@@ -442,7 +429,7 @@ namespace WPF_Password_Manager
                 {
                     buttonRedo.IsEnabled = false;
                 }
-            }
+            
         }
     }
 }

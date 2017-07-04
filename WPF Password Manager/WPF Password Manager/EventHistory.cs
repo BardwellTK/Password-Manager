@@ -10,77 +10,70 @@ namespace WPF_Password_Manager
 {
     public class EventHistory
     {
-        private List<Deed> EventList;
-        private int _selectedEvent;
-        private Deed _selectedObject;
+        private LinkedList<Deed> _undoList; //Need to remove first and add last
+        private Stack<Deed> _redoList; //Need to push and pop and clear
+        //private int _selectedEvent;
+        //private Deed _selectedObject;
         public EventHistory()
         {
-            EventList = new List<Deed>();
+            _undoList = new LinkedList<Deed>();
+            _redoList = new Stack<Deed>();
         }
 
         public void NewEvent(MenuLocation menu, EventType eve, Container before, Container after)
         {
             Deed newDeed = new Deed(menu, eve, before, after);
-            if (EventList.Count > 0 && _selectedEvent < EventList.Count - 1)
+            if (RedoCount > 0)
             {
-                //if _selectedEvent < EventList.Count
-                //then delete all Deeds after _selected event
-                do
-                {
-                    EventList.RemoveAt(EventList.Count - 1);
-                } while (_selectedEvent < EventList.Count - 1);
+                //If Redo.Count > 0, and NewEvent
+                //Clear Redo
+                _redoList.Clear();
             }
-            else if (EventList.Count < 15) //limit list to 15
-            {
-                //fill list
-                EventList.Add(newDeed);
 
+            if (UndoCount < 30) //limit list to 30
+            {
+                //Add Deed to list
+                _undoList.AddLast(newDeed);
             }
             else
             {
                 //balance list
-                EventList.RemoveAt(0);
-                EventList.Add(newDeed);
+                _undoList.RemoveFirst();
+                _undoList.AddLast(newDeed);
             }
-            _selectedEvent = (EventList.Count - 1);
-            _selectedObject = EventList[_selectedEvent];
+            //_selectedEvent = (_undoList.Count - 1);
+            //_selectedObject = _undoList[_selectedEvent];
 
         }
 
-        public void Reset()
+        public Deed Undo()
         {
-            EventList.Clear();
-            _selectedEvent = 0;
-            _selectedObject = null;
-        }
-    
-
-        public bool Back()
-        {
-            if (_selectedEvent >= 0)
+            if (UndoCount > 0)
             {
-                //_selectedEvent--;
-                _selectedObject = EventList[_selectedEvent--];
-                return true;
+                var deed = _undoList.Last();
+                _undoList.RemoveLast();
+                _redoList.Push(deed);
+                return deed;
             }
-            return false;
+            return null;
         }
 
-        public bool Forward()
+        public Deed Redo()
         {
-            if (_selectedEvent < 14 && _selectedEvent < EventList.Count)
+            if (RedoCount > 0)
             {
-                //_selectedEvent++;
-                _selectedObject = EventList[++_selectedEvent];
-                return true;
+                var deed = _redoList.Pop();
+                _undoList.AddLast(deed);
+                return deed;
             }
-            return false;
+            return null;
         }
 
-        public Deed SelectedItem { get { return _selectedObject; } }
-        public int EventCount { get { return EventList.Count; } }
-        public int SelectedEvent { get { return _selectedEvent; } }
+        //public Deed SelectedItem { get { return _selectedObject; } }
+        public int UndoCount { get { return _undoList.Count; } }
+        public int RedoCount { get { return _redoList.Count; } }
+        //public int SelectedEvent { get { return _selectedEvent; } }
 
-        
+
     }
 }

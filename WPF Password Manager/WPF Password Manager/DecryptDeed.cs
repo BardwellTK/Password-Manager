@@ -16,54 +16,68 @@ namespace WPF_Password_Manager
       /// <summary>
       /// DecryptDeed: Takes a deed, and performs actions based on deed
       /// </summary>
-      private void DecryptDeed(Deed deed, bool undo)
+      private void DecryptDeed(bool undo)
       {
           //undo = undo ? true : false;
           //redo = !undo ? true : false;
           //what event occurred?
-          var eventType = deed.Action;
-
-          //{Delete,Add,Edit,ReTitle,Back,Select} ---------
-
-          //Method ListChange(Deed deed, bool undo)
-          //{
-          //    IF ADD && REDO >> List.Add
-          //    IF DELETE && UNDO >> List.Add
-          //    IF DELETE && REDO >> List.Delete
-          //    IF ADD && UNDO >> List.Delete
-          //}
-          if (eventType == EventType.Add || eventType == EventType.Delete)
+          Deed deed = null;
+          if (undo)
           {
-            ListChange(deed,undo);
+              deed = _eventHistory.Undo();
+          }
+          else
+          {
+              deed = _eventHistory.Redo();
           }
 
-          //Method ApplyData(Deed deed, bool undo)
-          //{
-          //    //**Special case, sum both into one, because they
-          //    //**just overwrite a container in one.
-          //    IF EDIT || RETITLE
-          //    {
-          //        IF UNDO >> Apply.deed.Before;
-          //        IF REDO >> Apply.deed.After;
-          //    }
-          //}
-          if (eventType == EventType.Edit || eventType == EventType.ReTitle)
+          if (deed != null)
           {
-            ApplyData(deed,undo);
-          }
+              var eventType = deed.Action;
 
-          //Method GoMenu(Deed deed, bool undo)
-          //{
-          //    IF BACK && UNDO >> Go.Forward
-          //    IF SELECT && REDO >> Go.Forward
-          //    IF SELECT && UNDO >> Go.Backward
-          //    IF BACK && REDO >> Go.Backward
-          //}
-          if (eventType == EventType.Back || eventType == EventType.Select)
-          {
-            //GoMenu(deed,undo);
+              //{Delete,Add,Edit,ReTitle,Back,Select} ---------
+
+              //Method ListChange(Deed deed, bool undo)
+              //{
+              //    IF ADD && REDO >> List.Add
+              //    IF DELETE && UNDO >> List.Add
+              //    IF DELETE && REDO >> List.Delete
+              //    IF ADD && UNDO >> List.Delete
+              //}
+              if (eventType == EventType.Add || eventType == EventType.Delete)
+              {
+                  ListChange(deed,undo);
+              }
+
+              //Method ApplyData(Deed deed, bool undo)
+              //{
+              //    //**Special case, sum both into one, because they
+              //    //**just overwrite a container in one.
+              //    IF EDIT || RETITLE
+              //    {
+              //        IF UNDO >> Apply.deed.Before;
+              //        IF REDO >> Apply.deed.After;
+              //    }
+              //}
+              if (eventType == EventType.Edit || eventType == EventType.ReTitle)
+              {
+                  ApplyData(deed,undo);
+              }
+
+              //Method GoMenu(Deed deed, bool undo)
+              //{
+              //    IF BACK && UNDO >> Go.Forward
+              //    IF SELECT && REDO >> Go.Forward
+              //    IF SELECT && UNDO >> Go.Backward
+              //    IF BACK && REDO >> Go.Backward
+              //}
+              if (eventType == EventType.Back || eventType == EventType.Select)
+              {
+                GoMenu(deed,undo);
+              }
           }
-      }
+        }
+
       private void ListChange(Deed deed, bool undo)
       {
         var eventType = deed.Action;
@@ -113,7 +127,7 @@ namespace WPF_Password_Manager
                 {
                     //Menu.Go.Backward
                     StaticBack();
-                    
+
                 }
         }
       }
