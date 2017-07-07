@@ -35,21 +35,11 @@ namespace WPF_Password_Manager
     /// #5: 15/06/17 @ 22:39 -  Removed buttonCopy, replaced with buttonSelect, and buttonSelect dynamically changes to act as either select or copy
     /// #6: 15/06/17 @ 22:40 -  Organised UI a lot, added search feature, undo/redo & options buttons, also added Canvas(Panel) for options
     /// VERSION 1 (CURRENT):
-    /// TODO Make Organise and refurbish event handling (UNDO & REDO)
-    ///     - Add and Delete (Mostly working)
-    ///     - Edit and ReTitle (Mostly working)
-    ///     ----- Both aobve, sometimes run into errors when having multiple events etc
-    ///     ----- and stacking on eachother, but working when only one is done.
-    ///     - Back and Select (Disabled)
-    ///     ----- Was really difficult to figure out how to work
-    ///     ----- Was not worth the time for such a small thing
-    ///     ----- Disabled functionality.
+    /// TODO Saves are related to each device (System.Environment.MachineName from a console or WinForms app.)
+    /// ----- Each device has it's own location for the data file
     /// TODO Make items movable through menus
     /// TODO Set up secure error handling
     /// TODO File in SQL Database
-    /// TODO Saves are related to each device
-    /// ----- Each device has it's own location for the data file
-    /// 
     /// 
     /// VERSION 2 (NEXT STAGE):
     /// TODO Fully custom UI

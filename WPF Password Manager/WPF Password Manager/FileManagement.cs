@@ -15,36 +15,46 @@ namespace WPF_Password_Manager
         private static string curdir = Directory.GetCurrentDirectory();
         private static string settingsLoc = curdir + @"\settings.txt";
         private static string saveLoc;
+        private List<string> saveLocLines;
+        private static string deviceName = Environment.MachineName;
 
         private void LoadFile()
         {
             try
             {
+                saveLocLines = new List<string>();
                 if (File.Exists(settingsLoc))
                 {
                     //if yes, read data.txt loc and make saveLoc = (string)data.txt
                     using (StreamReader reader = new StreamReader(@settingsLoc))
                     {
-                        string line;
+                        string line, tempSaveLoc;
                         while ((line = reader.ReadLine()) != null)
                         {
-                            if (line.Contains("saveLoc ~"))
+                            if (line.Contains("saveLoc ~") && line.Contains($"{deviceName}"))
                             {
-                                int a = line.IndexOf("\"") + 1;
+                                int a = line.IndexOf("\"",line.IndexOf("Location = ")) + 1;
                                 int b = line.IndexOf("\"", a);
-                                saveLoc = line.Substring(a, b - a);
+                                tempSaveLoc = line.Substring(a, b - a);
+                                //No point in adding line, better saveLoc, because
+                                //string will have to be cut at the end anyway
+                                saveLocLines.Add(line);
+                                if (line.Contains(curdir))
+                                {
+                                    saveLoc = tempSaveLoc;
+                                }
                             }
                         }
+                        
                     }
-                    if (saveLoc == null)
-                    {
-                        CreateSettings();
-                    }
+                    
                 }
-                else
+                //More effiecient than an else and this.
+                if (string.IsNullOrEmpty(saveLoc))
                 {
                     CreateSettings();
                 }
+
                 if (File.Exists(saveLoc)) //check just in case error occurred
                 {
                     using (StreamReader reader = new StreamReader(@saveLoc))
@@ -71,18 +81,40 @@ namespace WPF_Password_Manager
             }
         }
 
+        /// <summary>
+        /// CreateSettings: Called when
+        ///                         - saveLoc does not exist
+        ///                         - no line in file is related to current device
+        /// </summary>
         private void CreateSettings()
-        {
-            //creating writing mechanism
+        {//set saveLoc to default;
             saveLoc = curdir + @"\data.txt";
-            using (StreamWriter writer = new StreamWriter(@settingsLoc))
+            //create file open mode
+            FileMode fileMode = new FileMode();
+            //is saveLocLines empty?
+            if (saveLocLines == null || saveLocLines.Count == 0 || string.IsNullOrEmpty(saveLocLines[0]))
             {
-                //set saveLoc
-                //write data location
-                writer.WriteLine(saveLoc);
+                //Create/Overwrite file
+                fileMode = FileMode.Create;
+                
             }
+            else //no?
+            {
+                //append to file.
+                fileMode = FileMode.Append;
+            }
+
+            //Write to file...
+            using (FileStream fs = File.Open(settingsLoc, fileMode))
+            using (StreamWriter writer = new StreamWriter(fs))
+            {
+                //State saveLoc, then actual data and associated device.
+                writer.WriteLine($"saveLoc ~ Location = \"{saveLoc}\" Device = \"{deviceName}\"");
+            }
+
+
         }
-        
+
         private void LoadLine(string line)
         {
             /* Container ~ Title = "mytitle"
@@ -98,13 +130,13 @@ namespace WPF_Password_Manager
              */
             if (line.Contains("Container ~"))
             {
-                containers.Add(new Container(containers.Count,TitleCheck(line)));
+                containers.Add(new Container(containers.Count,ExtractData(line,true)));
             }
             else if(line.Contains("Box ~"))
             {
                 containers.IntoPerspective(containers.Count - 1);
                 SelectedContainer = containers.Perspective;
-                SelectedContainer.Add(new Container(SelectedContainer.Count, TitleCheck(line)));
+                SelectedContainer.Add(new Container(SelectedContainer.Count, ExtractData(line, true)));
             }
             else if(line.Contains("Entity ~"))
             {
@@ -112,35 +144,29 @@ namespace WPF_Password_Manager
                 if (containers.Perspective.Perspective != null)
                 {
                     SelectedContainer = containers.Perspective.Perspective;
-                    SelectedContainer.Add(new Container(SelectedContainer.Count, TitleCheck(line), DataCheck(line)));
+                    SelectedContainer.Add(new Container(SelectedContainer.Count, ExtractData(line, true), ExtractData(line, false)));
                     
                 }
             }
 
         }
 
-        private string TitleCheck(string data)
+        private string ExtractData(string data, bool title)
         {
             // Container ~ Title = "mytitle"
-            int start = data.IndexOf("\"") + 1 ;
+            int start;
+            if (title)
+            {
+                start = data.IndexOf("\"") + 1;
+            }
+            else
+            {
+                start = data.IndexOf("\"", data.IndexOf("Data =")) + 1;
+            }
             int end = data.IndexOf("\"", start);
             //difference of start and end - 1
             string output = data.Substring(start, end - start);
             return output;
-        }
-
-        private string DataCheck(string data)
-        {
-            try
-            {
-                int start = data.IndexOf("\"", data.IndexOf("Data =")) + 1;
-                int end = data.IndexOf("\"", start + 1);
-                string output = data.Substring(start, end - start);
-                return output;
-            } catch (ArgumentOutOfRangeException)
-            {
-                return "";
-            }
         }
 
         private void Save()
