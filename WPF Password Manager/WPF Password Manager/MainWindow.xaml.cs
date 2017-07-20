@@ -35,15 +35,16 @@ namespace WPF_Password_Manager
     /// #5: 15/06/17 @ 22:39 -  Removed buttonCopy, replaced with buttonSelect, and buttonSelect dynamically changes to act as either select or copy
     /// #6: 15/06/17 @ 22:40 -  Organised UI a lot, added search feature, undo/redo & options buttons, also added Canvas(Panel) for options
     /// VERSION 1 (CURRENT):
-    /// TODO Saves are related to each device (System.Environment.MachineName from a console or WinForms app.)
-    /// ----- Each device has it's own location for the data file
-    /// TODO Make items movable through menus
     /// TODO Set up secure error handling
     /// TODO File in SQL Database
+    /// TODO Change File Managment and Program Logic to allow completely 
+    /// dynamic container placement, instead of container >> box >> entity
+    /// TODO Options (Save Location/Colour Theme/Use custom font/Convert form old file type to new format)
     /// 
     /// VERSION 2 (NEXT STAGE):
     /// TODO Fully custom UI
     /// TODO Encrpytion
+    /// TODO Make items movable through menus
     /// </summary>
     public partial class MainWindow : Window
     {
