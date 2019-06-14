@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF_Password_Manager"
         mc:Ignorable="d"
-        Title="Password Manager" Height="557" Width="345" ResizeMode="NoResize">
+        Title="Password Manager" Height="557" Width="345" ResizeMode="CanMinimize">
 
     <Grid>
         <ListView x:Name="listViewer" HorizontalAlignment="Left" Height="279" Margin="10,82,0,0" VerticalAlignment="Top" Width="315" Style="{DynamicResource GeoLight}" MouseDoubleClick="Select">
@@ -31,12 +31,15 @@
         <Button x:Name="buttonRedo" Content="{StaticResource RedoImage}" HorizontalAlignment="Left" Margin="270,11,0,0" VerticalAlignment="Top" Width="25" Height="25" Click="Redo"/>
         <Button x:Name="buttonDelete" Content="Delete" HorizontalAlignment="Left" Margin="250,366,0,0" VerticalAlignment="Top" Width="75" Click="Delete" Style="{DynamicResource GeoLight}"/>
         <Label x:Name="labelSearch" Content="Search" HorizontalAlignment="Left" Margin="10,48,0,0" VerticalAlignment="Top" Style="{DynamicResource TekoMed}" FontSize="16" Width="63"/>
-        <TextBox x:Name="InputSearch" HorizontalAlignment="Left" Height="23" Margin="52,51,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="273" Style="{DynamicResource GeoLight}" TextChanged="Search"/>
+        <TextBox x:Name="InputSearch" HorizontalAlignment="Left" Height="23" Margin="78,51,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="247" Style="{DynamicResource GeoLight}" TextChanged="Search"/>
         <Canvas Height="2" Width="315" Background="Black" Margin="10,41,14,485"/>
         <Canvas x:Name="panelOptions" HorizontalAlignment="Left" Height="439" Margin="0,38,0,0" VerticalAlignment="Top" Width="339" Background="White">
             <Canvas Height="2" Canvas.Left="10" Canvas.Top="155" Width="315" Background="Black"/>
             <Canvas Height="2" Canvas.Left="10" Canvas.Top="7" Width="315" Background="Black"/>
-            <Label Content="OPTIONS" Canvas.Left="121" Canvas.Top="64"/>
+            <Button x:Name="buttonDataProtection" Content="Toggle Data Protection" Canvas.Left="10" Canvas.Top="14" Width="147" Style="{DynamicResource GeoLight}" Click="DataProtection"/>
+            <Label x:Name="labelDataProtection" Content="Status: Enabled" Canvas.Left="163" Canvas.Top="10"/>
+            <Button x:Name="buttonEasyRead" Content="Toggle Easy Read" Canvas.Left="10" Canvas.Top="37" Width="147" Style="{DynamicResource GeoLight}" Click="ButtonEasyRead_OnClick"/>
+            <Label x:Name="labelEasyRead" Content="Status: Disabled" Canvas.Left="163" Canvas.Top="33"/>
 
         </Canvas>
     </Grid>

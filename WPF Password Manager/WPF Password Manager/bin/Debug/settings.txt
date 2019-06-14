@@ -1,1 +1,1 @@
-saveLoc ~ Location = "C:\Users\Bardwell\Documents\GitHub\Password-Manager\WPF Password Manager\WPF Password Manager\bin\Debug\data.txt" Device = "DESKTOP-V8CFKN4"
+saveLoc ~ Location = "B:\GitHub\Repositories\Password-Manager\WPF Password Manager\WPF Password Manager\bin\Debug\data.txt" Device = "CHICKENFACTORY"

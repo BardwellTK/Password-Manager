@@ -44,6 +44,16 @@ namespace WPF_Password_Manager
                                     saveLoc = tempSaveLoc;
                                 }
                             }
+                            if (line.Contains("easyRead ~"))
+                            {
+                                //easyRead ~ Enabled = "true"
+                                //or
+                                //easyRead ~ Enabled = "false"
+                                int a = line.IndexOf("\"");
+                                int b = line.IndexOf("\"", a);
+                                string text = line.Substring(a, b - a);
+                                Console.WriteLine($"HELLO HERE PLS {text}");
+                            }
                         }
                         
                     }
@@ -195,7 +205,6 @@ namespace WPF_Password_Manager
             }
             catch (Exception e)
             {
-                Console.WriteLine("here");
                 Console.WriteLine(e.ToString());
             }
         }

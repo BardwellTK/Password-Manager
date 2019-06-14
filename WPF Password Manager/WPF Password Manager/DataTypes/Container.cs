@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Windows.Media.Animation;
 
 namespace WPF_Password_Manager.DataTypes
 {
@@ -93,6 +94,8 @@ namespace WPF_Password_Manager.DataTypes
 
         public Container Copy()
         {
+            //Creates a copy of this current object
+            //Any lists or anything, are not copied.
             Container output;
             if (string.IsNullOrEmpty(Data))
             {
@@ -115,6 +118,16 @@ namespace WPF_Password_Manager.DataTypes
             output.ManualUniqueID(this.UniqueID);
             return output;
 
+        }
+
+        public void ProtectData()
+        {
+            //Replaces data.
+            //ONLY USE WHEN MAKING A COPY FIRST!!!
+            if (Data != null)
+            {
+                Data = new string('*', Data.Length);
+            }
         }
 
         public List<Container> GetList()

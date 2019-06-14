@@ -82,6 +82,10 @@ namespace WPF_Password_Manager
                     break;
             }
         }
-        
+
+        private void DataProtection(object sender, RoutedEventArgs e)
+        {
+            DataProtection();
+        }
     }
 }

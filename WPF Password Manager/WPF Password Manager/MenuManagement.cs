@@ -47,24 +47,67 @@ namespace WPF_Password_Manager
             }
             labelMenu.Content = $"{t}";
             var c = SelectedContainer.GetList();
-            foreach (var item in c)
+            if (menuIndex != MenuLocation.Box)
             {
-                listViewer.Items.Add(item);
+                foreach (var item in c)
+                {
+                    listViewer.Items.Add(item);
+                }
             }
+            else
+            {
+                foreach (var item in c)
+                {
+                    var itemCopy = item.Copy();
+                    if (dataProtection)
+                    {
+                        itemCopy.ProtectData();
+                    }
+                    listViewer.Items.Add(itemCopy);
+                }
+            }
+
+
         }
 
         private GridViewColumn ColumnData = new GridViewColumn{Header = "Data",DisplayMemberBinding = new Binding("Data")};
+        private GridViewColumn ColumnTitle = new GridViewColumn{Header = "Title", DisplayMemberBinding = new Binding("Title")};
+        private GridViewColumn ColumnID = new GridViewColumn{Header = "#", DisplayMemberBinding = new Binding("ID")};
         private void ColumnSwitch()
         {
             var gridView = (GridView)listViewer.View;
-            if (menuIndex == MenuLocation.Box && !gridView.Columns.Contains(ColumnData))
+            //Resizes the columns for the data within the section
+            if (menuIndex != MenuLocation.Box)
             {
-                gridView.Columns.Add(ColumnData);
-                
+                //Make Columns ID, Title, and resize
+                if (gridView.Columns.Contains(ColumnID))
+                    gridView.Columns.Remove(ColumnID);
+                if (gridView.Columns.Contains(ColumnTitle))
+                    gridView.Columns.Remove(ColumnTitle);
+                if (gridView.Columns.Contains(ColumnData))
+                    gridView.Columns.Remove(ColumnData);
+
+                if (!gridView.Columns.Contains(ColumnID))
+                    gridView.Columns.Add(ColumnID);
+                if (!gridView.Columns.Contains(ColumnTitle))
+                    gridView.Columns.Add(ColumnTitle);
             }
-            else if (menuIndex != MenuLocation.Box && gridView.Columns.Contains(ColumnData))
+            else
             {
-                gridView.Columns.Remove(ColumnData);
+                //Make Columns ID, Title, Data, and resize
+                if (gridView.Columns.Contains(ColumnID))
+                    gridView.Columns.Remove(ColumnID);
+                if (gridView.Columns.Contains(ColumnTitle))
+                    gridView.Columns.Remove(ColumnTitle);
+                if (gridView.Columns.Contains(ColumnData))
+                    gridView.Columns.Remove(ColumnData);
+
+                if (!gridView.Columns.Contains(ColumnID))
+                    gridView.Columns.Add(ColumnID);
+                if (!gridView.Columns.Contains(ColumnTitle))
+                    gridView.Columns.Add(ColumnTitle);
+                if (!gridView.Columns.Contains(ColumnData))
+                    gridView.Columns.Add(ColumnData);
             }
         }
 

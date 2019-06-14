@@ -93,7 +93,20 @@ namespace WPF_Password_Manager
             //Copy function here!
             try
             {
+                //Get selected item from listview
                 var c = (Container)listViewer.SelectedItem;
+                //Match it to container from menu
+                foreach (Container container in SelectedContainer.GetList())
+                {
+                    if (c.ID == container.ID)
+                    {
+                        c = container;
+                        break;
+                    }
+                }
+                //TODO
+
+                //Copy data from matched item.
                 Clipboard.SetText(c.Data);
                 labelRecent.Text = $"Successfully copied '{c.Title}' from '{c.Parent.Title}'";
             }
